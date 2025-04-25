@@ -19,7 +19,7 @@ const Profile = () => {
             Authorization: `Bearer ${token}`,
           },
         });
-        setUsername(response.data.username);
+        setUsername(response.data.username);  // 서버에서 받은 username 설정
       } catch (err) {
         setError("Failed to load profile");
         console.error("Error fetching profile:", err);
@@ -43,7 +43,7 @@ const Profile = () => {
       );
       alert("Username changed successfully!");
       setNewUsername("");
-      setUsername(response.data.user.username);
+      setUsername(response.data.user.username); // 변경된 username을 업데이트
       localStorage.setItem("token", response.data.token);
     } catch (err) {
       if (err.response && err.response.status === 400) {
@@ -56,26 +56,36 @@ const Profile = () => {
   };
 
   const handleDeleteAccount = async () => {
-    try {
-      const token = localStorage.getItem("token");
-      await axios.delete("http://localhost:5001/profile", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      alert("Account deleted successfully!");
-      localStorage.removeItem("token");
-      navigate("/signup");
-    } catch (err) {
-      console.error("Error deleting account:", err);
-      setError("Failed to delete account.");
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete your account? This action is irreversible."
+    );
+    if (confirmDelete) {
+      try {
+        const token = localStorage.getItem("token");
+        await axios.delete("http://localhost:5001/profile", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        alert("Account deleted successfully!");
+        localStorage.removeItem("token");
+        navigate("/signup");
+      } catch (err) {
+        console.error("Error deleting account:", err);
+        setError("Failed to delete account.");
+      }
     }
   };
 
   return (
     <div className="profile-container">
       <h1>Your Profile</h1>
-      {error && <p style={{ color: "red" }}>{error}</p>}
+      {error && <p className="error-message">{error}</p>}
+
+      {/* Display current username */}
+      <div className="username-section">
+        <p>Current Username: <strong>{username}</strong></p>
+      </div>
 
       <div className="form-section">
         <label htmlFor="new-username">Edit Username:</label>
@@ -86,7 +96,9 @@ const Profile = () => {
           value={newUsername}
           onChange={(e) => setNewUsername(e.target.value)}
         />
-        <button onClick={handleUpdateUsername}>Update Username</button>
+        <button className="update-btn" onClick={handleUpdateUsername}>
+          Update Username
+        </button>
       </div>
 
       <div className="delete-section">

@@ -10,5 +10,7 @@ CentennialBook is a simple social media web app originally developed as a group 
 - User sign-up/login (basic)
 - Create, edit, delete posts
 - Simple homepage with post feed
+- Basic User Profiles
+- Minimal UI/UX Design
 
 

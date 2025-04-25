@@ -6,7 +6,7 @@ function Banner({ isAuthenticated }) {
   console.log("isAuthenticated in Banner:", isAuthenticated);
   return (
     <nav className="banner">
-      <Link to="/" className="logo">
+      <Link to="/home" className="logo"> 
         CentennialBook
       </Link>
       {isAuthenticated && (
